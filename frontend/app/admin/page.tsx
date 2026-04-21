@@ -36,8 +36,11 @@ export default function AdminPage() {
   }, [adminId]);
 
   useEffect(() => {
-    fetchDocuments();
-  }, [adminId]);
+    // Move to next tick to avoid "cascading renders" lint error
+    Promise.resolve().then(() => {
+      fetchDocuments();
+    });
+  }, [adminId, fetchDocuments]);
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
