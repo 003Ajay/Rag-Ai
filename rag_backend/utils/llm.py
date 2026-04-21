@@ -29,6 +29,30 @@ def generate_answer(question: str, context: str) -> str:
         print(f"LLM Error: {e}")
         return "Not available"
 
+def stream_generate_answer(question: str, context: str):
+    """Yields tokens from Groq as they are generated."""
+    system_prompt = (
+        "You are a helpful company assistant.\n"
+        "Answer the question ONLY based on the provided Context.\n"
+        "Do not hallucinate.\n"
+    )
+    user_prompt = f"Context:\n{context}\n\nQuestion:\n{question}"
+    
+    try:
+        response = client.chat.completions.create(
+            messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}],
+            model="llama-3.1-8b-instant",
+            temperature=0.0,
+            max_tokens=600,
+            stream=True
+        )
+        for chunk in response:
+            if chunk.choices[0].delta.content:
+                yield chunk.choices[0].delta.content
+    except Exception as e:
+        print(f"Streaming LLM Error: {e}")
+        yield "An error occurred while generating the answer."
+
 if __name__ == "__main__":
     question = "What is Paddy Disease?"
     

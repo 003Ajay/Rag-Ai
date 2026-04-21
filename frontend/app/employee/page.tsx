@@ -20,20 +20,26 @@ export default function EmployeePage() {
     setQueryError("");
 
     try {
-      const res = await fetch(`${API_BASE}/employee/query`, {
+      const response = await fetch(`${API_BASE}/employee/stream-query`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),
       });
 
-      if (!res.ok) {
-        throw new Error(await res.text());
+      if (!response.ok) {
+        throw new Error("Failed to connect to the assistant.");
       }
 
-      const data = await res.json();
-      setAnswer(data.answer);
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      if (!reader) throw new Error("Could not start stream reader.");
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        setAnswer((prev) => prev + chunk);
+      }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setQueryError(`Query failed: ${errorMessage}`);
@@ -43,56 +49,59 @@ export default function EmployeePage() {
   };
 
   return (
-    <>
-      <header className="header">
-        <div style={{ position: 'absolute', left: '2rem', top: '2rem' }}>
-          <Link href="/" className="btn" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
-            ← Back to Home
-          </Link>
-        </div>
-        <h1>Employee Portal</h1>
-        <p>Query the company&apos;s internal knowledge base</p>
-      </header>
-      
-      <main className="container">
-        <section className="panel" style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <h2>Ask the Assistant</h2>
-          <p>Retrieve summarized answers from our collective expertise without needing to search through individual spreadsheets or PDFs.</p>
+    <div className="employee-bg">
+      {/* Small logout link at the top right */}
+      <div style={{ position: 'absolute', top: '1.5rem', right: '2rem' }}>
+        <Link href="/" style={{ color: '#666', fontSize: '0.85rem', fontWeight: 600, textDecoration: 'none', padding: '0.4rem 1rem', border: '1px solid #ddd', borderRadius: '20px' }}>
+          Logout
+        </Link>
+      </div>
 
-          <form onSubmit={handleQuery} style={{ marginTop: '1.5rem' }}>
-            <div className="form-group">
-              <label>What&apos;s on your mind?</label>
-              <textarea 
-                value={question} 
-                onChange={(e) => setQuestion(e.target.value)}
-                placeholder="E.g. What are our data retention policies for client projects?"
-                required
-              ></textarea>
-            </div>
-
+      <main className="hero-section">
+        {/* The Chat Window Core */}
+        <div className="prompt-card">
+          <div className="prompt-input-wrapper">
+            <textarea 
+               className="prompt-textarea"
+               value={question}
+               onChange={(e) => setQuestion(e.target.value)}
+               placeholder="How can I help you today?"
+               onKeyDown={(e) => {
+                 if (e.key === 'Enter' && !e.shiftKey) {
+                   e.preventDefault();
+                   handleQuery(e as any);
+                 }
+               }}
+            />
             <button 
-              type="submit" 
-              className="btn" 
-              disabled={!question.trim() || queryLoading}
+                className="send-btn-orange" 
+                onClick={(e) => handleQuery(e as any)}
+                disabled={queryLoading}
             >
-              {queryLoading ? <div className="spinner"></div> : 'Ask AI Assistant'}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+              </svg>
             </button>
+          </div>
+        </div>
 
-            {queryError && (
-              <div className="feedback error">
-                {queryError}
-              </div>
-            )}
-
-            {answer && (
-              <div className="result-box">
-                <h3>Knowledge Base Response</h3>
-                <p>{answer}</p>
-              </div>
-            )}
-          </form>
-        </section>
+        {/* Streaming Result Area */}
+        {(answer || queryLoading || queryError) && (
+          <div className="streaming-result" style={{ marginTop: '2rem', animation: 'fadeIn 0.5s ease' }}>
+             <h3 style={{ fontSize: '0.8rem', color: '#f17b21', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>
+                Assistant
+             </h3>
+             {queryError ? (
+               <p style={{ color: '#f85149' }}>{queryError}</p>
+             ) : (
+               <div style={{ whiteSpace: 'pre-wrap' }}>
+                 {answer}
+                 {queryLoading && <span className="cursor"></span>}
+               </div>
+             )}
+          </div>
+        )}
       </main>
-    </>
+    </div>
   );
 }

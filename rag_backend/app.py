@@ -2,10 +2,11 @@ from dotenv import load_dotenv
 load_dotenv()  # Load environment variables first
 
 from fastapi import FastAPI, UploadFile, File, Form, BackgroundTasks, HTTPException
+from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from rag_backend.services.upload_service import handle_upload, list_documents
-from rag_backend.services.query_service import handle_query
+from rag_backend.services.query_service import handle_query, stream_handle_query
 
 app = FastAPI(title="Enterprise RAG System")
 
@@ -74,14 +75,19 @@ async def get_admin_documents(admin_id: str = None):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/employee/query")
-async def employee_query(request: QueryRequest):
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/employee/stream-query")
+async def employee_stream_query(request: QueryRequest):
     """
-    Employee endpoint to query the RAG system.
+    Streaming version of the employee query endpoint.
     """
     try:
-        answer = handle_query(request.question)
-        return {"answer": answer}
+        return StreamingResponse(
+            stream_handle_query(request.question),
+            media_type="text/event-stream"
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -309,6 +309,141 @@ input[type="file"]::-webkit-file-upload-button:hover {
 }
 
 /* =========================================
+   AI ASSISTANT THEME (EMPLOYEE PORTAL)
+   ========================================= */
+
+.employee-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e3e8f8 0%, #f9f9f9 50%, #fbd8bc 100%);
+  display: flex;
+  flex-direction: column;
+  color: #1a1a1a;
+}
+
+.hero-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+  max-width: 900px;
+  line-height: 1.1;
+  letter-spacing: -2px;
+}
+
+.hero-title span {
+  color: #a4b62d; 
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: #4a4a4a;
+  max-width: 600px;
+  margin-bottom: 3rem;
+}
+
+.prompt-card {
+  width: 100%;
+  max-width: 800px;
+  background: white;
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.prompt-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.prompt-textarea {
+  width: 100%;
+  border: none !important;
+  background: transparent !important;
+  font-size: 1.2rem !important;
+  padding: 1rem;
+  min-height: 120px;
+  outline: none !important;
+  resize: none;
+  color: #1a1a1a;
+}
+
+.send-btn-orange {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.5rem;
+  background: #f17b21;
+  color: white;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.suggestion-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.pill {
+  background: rgba(255,255,255,0.4);
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.streaming-result {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 2rem;
+  text-align: left;
+  line-height: 1.6;
+  font-size: 1.1rem;
+  color: #333;
+  padding: 2rem;
+  background: rgba(255,255,255,0.7);
+  border-radius: 20px;
+  border-left: 5px solid #f17b21;
+}
+
+.cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1.2rem;
+  background: #f17b21;
+  margin-left: 2px;
+  animation: blink 0.8s infinite;
+  vertical-align: middle;
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+/* =========================================
    ARTISTIC LOGIN THEME
    ========================================= */
 
