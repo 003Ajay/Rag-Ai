@@ -11,7 +11,7 @@ export default function EmployeePage() {
   const [answer, setAnswer] = useState("");
   const [queryError, setQueryError] = useState("");
 
-  const handleQuery = async (e: React.FormEvent) => {
+  const handleQuery = async (e: React.FormEvent | React.KeyboardEvent | React.MouseEvent) => {
     e.preventDefault();
     if (!question.trim()) return;
 
@@ -69,13 +69,13 @@ export default function EmployeePage() {
                onKeyDown={(e) => {
                  if (e.key === 'Enter' && !e.shiftKey) {
                    e.preventDefault();
-                   handleQuery(e as any);
+                   handleQuery(e);
                  }
                }}
             />
             <button 
                 className="send-btn-orange" 
-                onClick={(e) => handleQuery(e as any)}
+                onClick={(e) => handleQuery(e)}
                 disabled={queryLoading}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
