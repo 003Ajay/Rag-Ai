@@ -49,8 +49,9 @@ export default function Home() {
       
       // Redirect to the appropriate portal
       router.push(data.redirect);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -34,8 +34,9 @@ export default function EmployeePage() {
 
       const data = await res.json();
       setAnswer(data.answer);
-    } catch (err: any) {
-      setQueryError(`Query failed: ${err.message}`);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setQueryError(`Query failed: ${errorMessage}`);
     } finally {
       setQueryLoading(false);
     }
@@ -50,7 +51,7 @@ export default function EmployeePage() {
           </Link>
         </div>
         <h1>Employee Portal</h1>
-        <p>Query the company's internal knowledge base</p>
+        <p>Query the company&apos;s internal knowledge base</p>
       </header>
       
       <main className="container">
@@ -60,7 +61,7 @@ export default function EmployeePage() {
 
           <form onSubmit={handleQuery} style={{ marginTop: '1.5rem' }}>
             <div className="form-group">
-              <label>What's on your mind?</label>
+              <label>What&apos;s on your mind?</label>
               <textarea 
                 value={question} 
                 onChange={(e) => setQuestion(e.target.value)}

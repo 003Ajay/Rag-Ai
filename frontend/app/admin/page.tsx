@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -19,7 +19,7 @@ export default function AdminPage() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [docsLoading, setDocsLoading] = useState(true);
 
-  const fetchDocuments = async () => {
+  const fetchDocuments = useCallback(async () => {
     try {
       setDocsLoading(true);
       const res = await fetch(`${API_BASE}/admin/documents?admin_id=${adminId}`);
@@ -32,7 +32,7 @@ export default function AdminPage() {
     } finally {
       setDocsLoading(false);
     }
-  };
+  }, [adminId]);
 
   useEffect(() => {
     fetchDocuments();
@@ -63,8 +63,9 @@ export default function AdminPage() {
       setFile(null);
       // Refresh documents list after upload
       setTimeout(fetchDocuments, 2000); // Wait a bit for S3 to sync
-    } catch (err: any) {
-      setUploadMsg({ type: 'error', text: `Upload failed: ${err.message}` });
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setUploadMsg({ type: 'error', text: `Upload failed: ${errorMessage}` });
     } finally {
       setUploadLoading(false);
     }
