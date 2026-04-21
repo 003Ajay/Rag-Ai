@@ -307,3 +307,285 @@ input[type="file"]::-webkit-file-upload-button:hover {
   background-color: var(--border-color);
   color: var(--text-muted);
 }
+
+/* =========================================
+   ARTISTIC LOGIN THEME
+   ========================================= */
+
+.login-wrapper {
+  min-height: 100vh;
+  background-color: #530a3a; /* Deep purple background from image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 850px;
+  min-height: 480px;
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: scaleIn 0.5s ease-out;
+}
+
+/* Left Panel: Artistic Gradient */
+.login-left {
+  flex: 0 0 35%;
+  background: #a93c7d;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding-left: 2rem;
+}
+
+/* Diagonal shapes to match image */
+.login-left::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(135deg, #7c1e5a 0%, #a93c7d 50%, #c15b9b 100%);
+  top: -50%;
+  left: -50%;
+  transform: rotate(-15deg);
+}
+
+.login-left-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, transparent 70%);
+}
+
+/* Tab Switch Logic */
+.role-tabs {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.role-tab {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  font-weight: 700;
+  text-align: left;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 1rem 1.5rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.role-tab.active {
+  background: white;
+  color: black;
+  border-radius: 40px 0 0 40px;
+  position: relative;
+  transform: translateX(1px);
+}
+
+/* Curved corner effect for the active tab */
+.role-tab.active::after, .role-tab.active::before {
+  content: '';
+  position: absolute;
+  right: -1px;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+}
+
+.role-tab.active::before { bottom: 100%; border-bottom-right-radius: 20px; box-shadow: 5px 5px 0 5px white; }
+.role-tab.active::after { top: 100%; border-top-right-radius: 20px; box-shadow: 5px -5px 0 5px white; }
+
+/* Right Panel: Form */
+.login-right {
+  flex: 1;
+  padding: 3rem 4rem;
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.user-icon-circle {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #c15b9b, #7c1e5a);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  box-shadow: 0 4px 15px rgba(124, 30, 90, 0.3);
+}
+
+.user-icon-circle svg {
+  width: 40px;
+  height: 40px;
+  color: white;
+}
+
+.login-header h2 {
+  color: #a93c7d;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 2px;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+/* Stylish Inputs */
+.login-input-group {
+  position: relative;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.login-input-group label {
+  position: absolute;
+  left: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: 0.3s ease;
+}
+
+.login-input-group.focused label, 
+.login-input-group.has-value label {
+  top: -10px;
+  font-size: 0.8rem;
+  color: #a93c7d;
+}
+
+.login-input-group input {
+  width: 100%;
+  padding: 0.8rem 1rem 0.8rem 2.5rem;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: #333;
+  outline: none !important;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.forgot-link {
+  color: #c15b9b;
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: 500;
+  display: block;
+  margin-top: -1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* The Rounded Login Button */
+.btn-login {
+  background: #a93c7d;
+  color: white;
+  border: none;
+  padding: 0.8rem 2.5rem;
+  border-radius: 40px;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  transition: 0.3s;
+  box-shadow: 0 4px 15px rgba(169, 60, 125, 0.4);
+  align-self: flex-end;
+}
+
+.btn-login:hover:not(:disabled) {
+  background: #7c1e5a;
+  transform: translateY(-2px);
+}
+
+.login-footer {
+  margin-top: auto;
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-footer p {
+  color: #333;
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.social-icons {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  background: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .login-card {
+    flex-direction: column;
+    max-width: 400px;
+  }
+  .login-left {
+    flex: 0 0 100px;
+    padding: 0;
+  }
+  .role-tabs {
+    flex-direction: row;
+    height: 100%;
+    align-items: flex-end;
+  }
+  .role-tab {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+  }
+  .role-tab.active {
+    border-radius: 12px 12px 0 0;
+  }
+  .role-tab.active::before, .role-tab.active::after { display: none; }
+  .login-right {
+    padding: 2rem;
+  }
+}

@@ -8,25 +8,15 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 export default function Home() {
   const router = useRouter();
   
-  // Admin Login State
-  const [adminUser, setAdminUser] = useState("");
-  const [adminPass, setAdminPass] = useState("");
-  const [adminLoading, setAdminLoading] = useState(false);
-  const [adminError, setAdminError] = useState("");
+  const [role, setRole] = useState<'employee' | 'admin'>('employee');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [isFocused, setIsFocused] = useState<string | null>(null);
 
-  // Employee Login State
-  const [empUser, setEmpUser] = useState("");
-  const [empPass, setEmpPass] = useState("");
-  const [empLoading, setEmpLoading] = useState(false);
-  const [empError, setEmpError] = useState("");
-
-  const handleLogin = async (e: React.FormEvent, role: 'admin' | 'employee') => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const username = role === 'admin' ? adminUser : empUser;
-    const password = role === 'admin' ? adminPass : empPass;
-    const setLoading = role === 'admin' ? setAdminLoading : setEmpLoading;
-    const setError = role === 'admin' ? setAdminError : setEmpError;
-
     setLoading(true);
     setError("");
 
@@ -43,11 +33,8 @@ export default function Home() {
       }
 
       const data = await res.json();
-      // Store mock session
       localStorage.setItem("userRole", data.role);
       localStorage.setItem("userName", username);
-      
-      // Redirect to the appropriate portal
       router.push(data.redirect);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err);
@@ -58,95 +45,99 @@ export default function Home() {
   };
 
   return (
-    <>
-      <header className="header">
-        <h1>Enterprise RAG Core</h1>
-        <p>Intelligent Knowledge Management System</p>
-      </header>
-      
-      <main className="container">
-        <div className="dashboard-grid">
-          
-          {/* Admin Login Panel */}
-          <section className="panel">
-            <h2>Admin Login</h2>
-            <p>Access document management and indexing controls.</p>
-            
-            <form onSubmit={(e) => handleLogin(e, 'admin')} style={{ marginTop: '1.5rem' }}>
-              <div className="form-group">
-                <label>Username</label>
-                <input 
-                  type="text" 
-                  value={adminUser} 
-                  onChange={(e) => setAdminUser(e.target.value)}
-                  placeholder="admin"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Password</label>
-                <input 
-                  type="password" 
-                  value={adminPass} 
-                  onChange={(e) => setAdminPass(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
+    <div className="login-wrapper">
+      <div className="login-card">
+        
+        {/* Artistic Left Section */}
+        <aside className="login-left">
+          <div className="login-left-overlay"></div>
+          <div className="role-tabs">
+            <button 
+              className={`role-tab ${role === 'employee' ? 'active' : ''}`}
+              onClick={() => { setRole('employee'); setError(""); }}
+            >
+              Employees
+            </button>
+            <button 
+              className={`role-tab ${role === 'admin' ? 'active' : ''}`}
+              onClick={() => { setRole('admin'); setError(""); }}
+            >
+              Admin
+            </button>
+          </div>
+        </aside>
 
-              <button type="submit" className="btn btn-success" disabled={adminLoading}>
-                {adminLoading ? <div className="spinner"></div> : 'Login as Admin'}
+        {/* Form Right Section */}
+        <main className="login-right">
+          <div className="login-header">
+            <div className="user-icon-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <h2>Login</h2>
+          </div>
+
+          <form onSubmit={handleLogin}>
+            <div className={`login-input-group ${isFocused === 'user' ? 'focused' : ''} ${username ? 'has-value' : ''}`}>
+              <div className="input-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <label>Username / Email</label>
+              <input 
+                type="text" 
+                value={username} 
+                onChange={(e) => setUsername(e.target.value)}
+                onFocus={() => setIsFocused('user')}
+                onBlur={() => setIsFocused(null)}
+                required
+              />
+            </div>
+
+            <div className={`login-input-group ${isFocused === 'pass' ? 'focused' : ''} ${password ? 'has-value' : ''}`}>
+              <div className="input-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+              <label>Password</label>
+              <input 
+                type="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)}
+                onFocus={() => setIsFocused('pass')}
+                onBlur={() => setIsFocused(null)}
+                required
+              />
+            </div>
+
+            <a href="#" className="forgot-link" onClick={(e) => e.preventDefault()}>Forgot Password?</a>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
+              {error && <span style={{ color: '#f85149', fontSize: '0.8rem' }}>{error}</span>}
+              <button type="submit" className="btn-login" disabled={loading}>
+                {loading ? 'Validating...' : 'Login'}
               </button>
+            </div>
+          </form>
 
-              {adminError && <div className="feedback error">{adminError}</div>}
-              
-              <div style={{ marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                Demo hint: admin / admin123
-              </div>
-            </form>
-          </section>
+          {/* Footer Social (Placeholders) */}
+          <footer className="login-footer">
+            <p>Or Login With</p>
+            <div className="social-icons">
+               <button className="social-btn" onClick={(e) => e.preventDefault()}>
+                  <img src="https://www.google.com/favicon.ico" width="14" alt="G" /> Google
+               </button>
+               <button className="social-btn" onClick={(e) => e.preventDefault()}>
+                  <img src="https://www.facebook.com/favicon.ico" width="14" alt="F" /> Facebook
+               </button>
+            </div>
+          </footer>
+        </main>
 
-          {/* Employee Login Panel */}
-          <section className="panel">
-            <h2>Employee Login</h2>
-            <p>Access the internal knowledge base and AI assistant.</p>
-            
-            <form onSubmit={(e) => handleLogin(e, 'employee')} style={{ marginTop: '1.5rem' }}>
-              <div className="form-group">
-                <label>Username</label>
-                <input 
-                  type="text" 
-                  value={empUser} 
-                  onChange={(e) => setEmpUser(e.target.value)}
-                  placeholder="employee"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Password</label>
-                <input 
-                  type="password" 
-                  value={empPass} 
-                  onChange={(e) => setEmpPass(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
-
-              <button type="submit" className="btn" disabled={empLoading}>
-                {empLoading ? <div className="spinner"></div> : 'Login as Employee'}
-              </button>
-
-              {empError && <div className="feedback error">{empError}</div>}
-
-              <div style={{ marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                Demo hint: employee / user123
-              </div>
-            </form>
-          </section>
-
-        </div>
-      </main>
-    </>
+      </div>
+    </div>
   );
 }
