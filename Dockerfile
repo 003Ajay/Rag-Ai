@@ -20,6 +20,7 @@ RUN uv pip install --system -r pyproject.toml
 
 # Copy application code
 COPY rag_backend ./rag_backend
+COPY src ./src
 
 # Expose FastAPI port
 EXPOSE 8000
