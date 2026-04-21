@@ -21,7 +21,8 @@ export default function AdminPage() {
 
   const fetchDocuments = useCallback(async () => {
     try {
-      setDocsLoading(true);
+      // Only set loading if not already loading to avoid cascading renders
+      setDocsLoading(prev => prev ? prev : true);
       const res = await fetch(`${API_BASE}/admin/documents?admin_id=${adminId}`);
       if (res.ok) {
         const data = await res.json();
