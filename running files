@@ -1,0 +1,7 @@
+//
+for backend
+uv run python -m uvicorn rag_backend.app:app --host 0.0.0.0 --port 8000 --reload
+
+//
+for frontend: cd frontend
+npm run dev
